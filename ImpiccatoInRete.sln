@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImpiccatoInRete", "ImpiccatoInRete\ImpiccatoInRete.csproj", "{BE8D51D1-4BDC-4B0C-90B4-0D37F111EFE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpiccatoInRete", "ImpiccatoInRete\ImpiccatoInRete.csproj", "{BE8D51D1-4BDC-4B0C-90B4-0D37F111EFE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImpiccatoGiocatore", "ImpiccatoGiocatore\ImpiccatoGiocatore.csproj", "{2DBA7F64-FAF1-4201-9AEE-8FB523DC05DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpiccatoGiocatore", "ImpiccatoGiocatore\ImpiccatoGiocatore.csproj", "{2DBA7F64-FAF1-4201-9AEE-8FB523DC05DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

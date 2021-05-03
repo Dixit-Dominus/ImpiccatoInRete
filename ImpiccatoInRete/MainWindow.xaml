@@ -4,9 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImpiccatoInRete"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Loaded="Window_Loaded"
         Title="Impiccato" Height="450" Width="800">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.ColumnSpan="2" Margin="10" BorderBrush="Black" BorderThickness="0.5">
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="30,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Source IP:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBox x:Name="txtSourceIp" FontSize="20" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150"/>
+                <Label Margin="50,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Port:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBox  FontSize="20" VerticalAlignment="Center" x:Name="txtPort" Width="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button Click="btnCreaSocket_Click" x:Name="btnCreaSocket" VerticalAlignment="Center" Content="Ricezione ON" FontSize="20" Margin="70,0,0,0" Width="150"/>
+            </StackPanel>
+        </Border>
+        <ListBox x:Name="lstParoleRicevute" Grid.Row="1" Grid.Column="1" Margin="10"/>
+        <StackPanel Orientation="Vertical" Margin="10" Grid.Row="1" Grid.Column="0">
+            <TextBox x:Name="txtTest"/>
+            <Button Click="btnTest_Click" x:Name="btnTest" Height="20"/>
+        </StackPanel>
     </Grid>
 </Window>
