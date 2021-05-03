@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpiccatoInRete", "Impiccat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpiccatoGiocatore", "ImpiccatoGiocatore\ImpiccatoGiocatore.csproj", "{2DBA7F64-FAF1-4201-9AEE-8FB523DC05DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestioneNetworkECodifica", "GestioneNetworkECodifica\GestioneNetworkECodifica.csproj", "{C35C08FA-5874-4DC6-B3FA-BFA8C830F875}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2DBA7F64-FAF1-4201-9AEE-8FB523DC05DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DBA7F64-FAF1-4201-9AEE-8FB523DC05DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DBA7F64-FAF1-4201-9AEE-8FB523DC05DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C35C08FA-5874-4DC6-B3FA-BFA8C830F875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C35C08FA-5874-4DC6-B3FA-BFA8C830F875}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C35C08FA-5874-4DC6-B3FA-BFA8C830F875}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C35C08FA-5874-4DC6-B3FA-BFA8C830F875}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

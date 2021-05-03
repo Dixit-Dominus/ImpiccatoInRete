@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImpiccatoInRete"
         mc:Ignorable="d" Loaded="Window_Loaded"
-        Title="Impiccato" Height="450" Width="800">
+        Title="Impiccato" Height="490" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -24,10 +24,29 @@
                 <Button Click="btnCreaSocket_Click" x:Name="btnCreaSocket" VerticalAlignment="Center" Content="Ricezione ON" FontSize="20" Margin="70,0,0,0" Width="150"/>
             </StackPanel>
         </Border>
-        <ListBox x:Name="lstParoleRicevute" Grid.Row="1" Grid.Column="1" Margin="10"/>
-        <StackPanel Orientation="Vertical" Margin="10" Grid.Row="1" Grid.Column="0">
-            <TextBox x:Name="txtTest"/>
-            <Button Click="btnTest_Click" x:Name="btnTest" Height="20"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10" Orientation="Vertical">
+            <Label Content="Parole Ricevute:" FontSize="15"/>
+            <ListBox Height="280" Background="#fffbe8" x:Name="lstParoleRicevute" />
         </StackPanel>
+        <Border BorderBrush="Black" BorderThickness="0.5" Margin="10" Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Vertical" >
+                <StackPanel HorizontalAlignment="Center" Margin="10" Orientation="Horizontal">
+                    <Label FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Destination IP:"/>
+                    <TextBox HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="20,0,0,0" Width="200" Height="30" x:Name="txtDestIp"/>
+                </StackPanel>
+                <Button Click="btnScorriParola_Click" Margin="10,0,10,10" Content="Scorri Parola"  x:Name="btnScorriParola" Height="40" FontSize="20"/>
+                <Grid Margin="10" Height="200">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="6*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.RowSpan="2">
+                        <Button Height="30" Click="btnGeneraNuovaParola_Click" x:Name="btnGeneraNuovaParola" Content="Genera Nuova Parola"/>
+                        <Image x:Name="imgImpiccato" />
+                        <TextBlock x:Name="bkParola" FontSize="30" Text="" HorizontalAlignment="Center" TextAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
