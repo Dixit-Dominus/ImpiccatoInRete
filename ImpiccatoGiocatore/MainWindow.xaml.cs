@@ -24,6 +24,7 @@ namespace ImpiccatoGiocatore
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool abilitazioneMessaggio;
         public MainWindow()
         {
             InitializeComponent();
@@ -36,71 +37,108 @@ namespace ImpiccatoGiocatore
             //Creazione socket di ascolto
             Socket socket = new Socket(listenerEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             socket.Bind(listenerEndPoint);
-
-            if (listenerEndPoint.Port == 61500)
+            switch (listenerEndPoint.Port)
             {
-                //Messaggio grande massimo 256 caratteri.
-                Byte[] byteRicevuti = new byte[256];
-                string messaggio = string.Empty;
-                int nCaratteriRicevuti;
-
-                //Istruzione che non va a bloccare la task della finesta (Non si blocca l'interfaccia)
-                await Task.Run(() =>
-                {
-                    //Ascolto continuo
-                    while (true)
+                case 61500:
                     {
-                        //Se c'è qualcosa di ricevuto nel socket.
-                        if (socket.Available > 0)
-                        {
-                            messaggio = string.Empty;
-                            //Otteniamo il numero di caratteri ricevuto.
-                            nCaratteriRicevuti = socket.Receive(byteRicevuti, byteRicevuti.Length, 0);
-                            //Trasformiamo il numero ricevuto nella codifica ascii e otteniamo quindi un messaggio di stringa.
-                            messaggio += Encoding.ASCII.GetString(byteRicevuti, 0, nCaratteriRicevuti);
-                            this.Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                bkParola.Text = messaggio;
-                            }));
-                        }
-                    }
-                });
-            }
-            else
-            {
-                //Messaggio grande massimo 256 caratteri.
-                Byte[] byteRicevuti = new byte[256];
-                string messaggio = string.Empty;
-                int nCaratteriRicevuti;
+                        //Messaggio grande massimo 256 caratteri.
+                        Byte[] byteRicevuti = new byte[256];
+                        string messaggio = string.Empty;
+                        int nCaratteriRicevuti;
 
-                //Istruzione che non va a bloccare la task della finesta (Non si blocca l'interfaccia)
-                await Task.Run(() =>
-                {
-                    //Ascolto continuo
-                    while (true)
-                    {
-                        //Se c'è qualcosa di ricevuto nel socket.
-                        if (socket.Available > 0)
+                        //Istruzione che non va a bloccare la task della finesta (Non si blocca l'interfaccia)
+                        await Task.Run(() =>
                         {
-                            messaggio = string.Empty;
-                            //Otteniamo il numero di caratteri ricevuto.
-                            nCaratteriRicevuti = socket.Receive(byteRicevuti, byteRicevuti.Length, 0);
-                            //Trasformiamo il numero ricevuto nella codifica ascii e otteniamo quindi un messaggio di stringa.
-                            messaggio += Encoding.ASCII.GetString(byteRicevuti, 0, nCaratteriRicevuti);
-                            //Viene aggiornata l'interfaccia grafica in modo asincrono.
-                            this.Dispatcher.BeginInvoke(new Action(() =>
+                            //Ascolto continuo
+                            while (true)
                             {
-                                lstParoleRicevute.Items.Add(messaggio);
-                            }));
-                        }
+                                //Se c'è qualcosa di ricevuto nel socket.
+                                if (socket.Available > 0)
+                                {
+                                    abilitazioneMessaggio = true;
+                                    messaggio = string.Empty;
+                                    //Otteniamo il numero di caratteri ricevuto.
+                                    nCaratteriRicevuti = socket.Receive(byteRicevuti, byteRicevuti.Length, 0);
+                                    //Trasformiamo il numero ricevuto nella codifica ascii e otteniamo quindi un messaggio di stringa.
+                                    messaggio += Encoding.ASCII.GetString(byteRicevuti, 0, nCaratteriRicevuti);
+                                    this.Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        bkParola.Text = messaggio;
+                                    }));
+                                }
+                            }
+                        });
+                        break;
                     }
-                });
+                case 61501:
+                    {
+                        //Messaggio grande massimo 256 caratteri.
+                        Byte[] byteRicevuti = new byte[256];
+                        string messaggio = string.Empty;
+                        int nCaratteriRicevuti;
+
+                        //Istruzione che non va a bloccare la task della finesta (Non si blocca l'interfaccia)
+                        await Task.Run(() =>
+                        {
+                            //Ascolto continuo
+                            while (true)
+                            {
+                                //Se c'è qualcosa di ricevuto nel socket.
+                                if (socket.Available > 0)
+                                {
+                                    messaggio = string.Empty;
+                                    //Otteniamo il numero di caratteri ricevuto.
+                                    nCaratteriRicevuti = socket.Receive(byteRicevuti, byteRicevuti.Length, 0);
+                                    //Trasformiamo il numero ricevuto nella codifica ascii e otteniamo quindi un messaggio di stringa.
+                                    messaggio += Encoding.ASCII.GetString(byteRicevuti, 0, nCaratteriRicevuti);
+                                    //Viene aggiornata l'interfaccia grafica in modo asincrono.
+                                    this.Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        lstParoleRicevute.Items.Add(messaggio);
+                                    }));
+                                }
+                            }
+                        });
+                        break;
+                    }
+                case 61502:
+                    {
+                        //Messaggio grande massimo 256 caratteri.
+                        Byte[] byteRicevuti = new byte[256];
+                        string messaggio = string.Empty;
+                        int nCaratteriRicevuti;
+
+                        //Istruzione che non va a bloccare la task della finesta (Non si blocca l'interfaccia)
+                        await Task.Run(() =>
+                        {
+                            //Ascolto continuo
+                            while (true)
+                            {
+                                //Se c'è qualcosa di ricevuto nel socket.
+                                if (socket.Available > 0)
+                                {
+                                    messaggio = string.Empty;
+                                    //Otteniamo il numero di caratteri ricevuto.
+                                    nCaratteriRicevuti = socket.Receive(byteRicevuti, byteRicevuti.Length, 0);
+                                    //Trasformiamo il numero ricevuto nella codifica ascii e otteniamo quindi un messaggio di stringa.
+                                    messaggio += Encoding.ASCII.GetString(byteRicevuti, 0, nCaratteriRicevuti);
+                                    //Viene aggiornata l'interfaccia grafica in modo asincrono.
+                                    this.Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        bkCounter.Text = messaggio;
+                                    }));
+                                }
+                            }
+                        });
+                        break;
+                    }
             }
         }
 
         //Invio del messaggio:
         private void btnInviaParola_Click(object sender, RoutedEventArgs e)
         {
+            txtMessaggio.Text = string.Empty;
             //Recuperato indirizzo ip destinatario e la sua porta.
             IPAddress destIpAddress = IPAddress.Parse(txtDestinationIp.Text);
             int destinationPortNumber = int.Parse(txtPort.Text);
@@ -125,21 +163,19 @@ namespace ImpiccatoGiocatore
             socket.SendTo(byteInviati, destinationEndPoint);
         }
 
-        //Evento al click della creazione del canale di scolto
-        private void btnCreaSocket_Click(object sender, RoutedEventArgs e)
-        {
-            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(txtSourceIP.Text), int.Parse(txtPort.Text));
-            Thread startListener = new Thread(new ParameterizedThreadStart(SocketReceive));
-            startListener.Start(localEndPoint);
-            btnCreaSocket.IsEnabled = false;
-            txtPort.IsEnabled = false;
-            txtSourceIP.IsEnabled = false;
-        }
-
         //Controllo della casella di testo del messaggio.
         private void txtMessaggio_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(txtMessaggio.Text))
+            bool controllo = true;
+            for (int i = 0; i < lstParoleRicevute.Items.Count; i++)
+            {
+                int index = lstParoleRicevute.Items[i].ToString().IndexOf(':') + 1;
+                if (lstParoleRicevute.Items[i].ToString().Substring(index + 1) == txtMessaggio.Text)
+                {
+                    controllo = false;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(txtMessaggio.Text) && abilitazioneMessaggio && controllo)
             {
                 btnInviaParola.IsEnabled = true;
             }
@@ -154,6 +190,7 @@ namespace ImpiccatoGiocatore
             txtUsername.Text = txtUsername.Text.Trim();
             txtUsername.IsEnabled = false;
             btnUsernameConfirm.IsEnabled = false;
+            txtMessaggio.IsEnabled = true;
         }
 
         private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
@@ -173,22 +210,39 @@ namespace ImpiccatoGiocatore
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             txtUsername.Background = Brushes.LightCoral;
-            txtSourceIP.Text = GestioneNetwork.OttieniIPLocale();
             txtPort.Text = "60000";
-            txtSourceIP.Background = Brushes.LightGreen;
-            txtPort.Background = Brushes.LightGreen;
-            IPEndPoint localDataEndPoint = new IPEndPoint(IPAddress.Parse(txtSourceIP.Text), 61500);
             Thread startDataListener = new Thread(new ParameterizedThreadStart(SocketReceive));
-            startDataListener.Start(localDataEndPoint);
+            IPAddress destIP = GestioneNetwork.OttieniIPLocale();
+            IPEndPoint data2EndPoint = new IPEndPoint(destIP, 61500);
+            startDataListener.Start(data2EndPoint);
+            Thread startSecondDataListener = new Thread(new ParameterizedThreadStart(SocketReceive));
+            destIP = GestioneNetwork.OttieniIPLocale();
+            data2EndPoint = new IPEndPoint(destIP, 61501);
+            startSecondDataListener.Start(data2EndPoint);
+            Thread startThirdDataListener = new Thread(new ParameterizedThreadStart(SocketReceive));
+            destIP = GestioneNetwork.OttieniIPLocale();
+            data2EndPoint = new IPEndPoint(destIP, 61502);
+            startThirdDataListener.Start(data2EndPoint);
+            txtPort.Background = Brushes.LightGreen;
+            abilitazioneMessaggio = false;
         }
 
         private void txtInfo_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool controllo2 = GestioneNetwork.ControllaTestoPerIP(txtSourceIP.Text);
-            bool controllo1 = GestioneNetwork.VerificaPorta(txtPort.Text, 61500, 61501);
+            bool controllo2 = GestioneNetwork.ControllaTestoPerIP(txtDestinationIp.Text);
+            bool controllo1 = GestioneNetwork.VerificaPorta(txtPort.Text, 61500, 61501,61502);
             txtPort.Background = controllo1 ? Brushes.LightGreen : Brushes.LightCoral;
-            txtSourceIP.Background = controllo2 ? Brushes.LightGreen : Brushes.LightCoral;
-            btnCreaSocket.IsEnabled = controllo1 && controllo2;
+            txtDestinationIp.Background = controllo2 ? Brushes.LightGreen : Brushes.LightCoral;
+            btnConfermaDestinazione.IsEnabled = controllo1 && controllo2;
+        }
+
+        private void btnConfermaDestinazione_Click(object sender, RoutedEventArgs e)
+        {
+            txtDestinationIp.IsEnabled = false;
+            txtPort.IsEnabled = false;
+            txtUsername.IsEnabled = true;
+            btnConfermaDestinazione.IsEnabled = false;
+            btnUsernameConfirm.IsEnabled = true;
         }
     }
 }

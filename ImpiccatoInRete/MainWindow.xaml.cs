@@ -31,6 +31,8 @@ namespace ImpiccatoInRete
         private int SelectIndex { get; set; }
         private string ParolaCodificata { get; set; }
         private int ErrorCounter { get; set; }
+        private int DataDestinationPortAddress { get; set; }
+        private IPAddress DestinationIp { get; set; }
 
         //Inizzializzazione componenti della finestra,
         public MainWindow()
@@ -41,9 +43,10 @@ namespace ImpiccatoInRete
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             txtPort.Text = "60000";
-            txtSourceIp.Text = GestioneNetwork.OttieniIPLocale();
+            txtSourceIp.Text = GestioneNetwork.OttieniIPLocale().ToString();
             SelectIndex = 0;
-            ErrorCounter = 0;
+            DataDestinationPortAddress = 61500;
+            ErrorCounter = 10;
             ListaParole = new List<string>();
             StreamReader leggiparole = new StreamReader("parole.txt");
             while (!leggiparole.EndOfStream)
@@ -51,6 +54,9 @@ namespace ImpiccatoInRete
                 ListaParole.Add( leggiparole.ReadLine());
             }
             leggiparole.Close();
+            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(txtSourceIp.Text), int.Parse(txtPort.Text));
+            Thread startListener = new Thread(new ParameterizedThreadStart(SocketReceive));
+            startListener.Start(localEndPoint);
         }
 
         //Metodo di invio del messaggio
@@ -99,8 +105,10 @@ namespace ImpiccatoInRete
                         //Trasformiamo il numero ricevuto nella codifica ascii e otteniamo quindi un messaggio di stringa.
                         messaggio += Encoding.ASCII.GetString(byteRicevuti, 0, nCaratteriRicevuti);
                         //Viene aggiornata l'interfaccia grafica in modo asincrono.
+                        SocketSend(DestinationIp, 61501, messaggio);
                         this.Dispatcher.BeginInvoke(new Action(() =>
                         {
+                            btnScorriParola.IsEnabled = true;
                             lstParoleRicevute.Items.Add(messaggio);
                         }));
                     }
@@ -121,9 +129,15 @@ namespace ImpiccatoInRete
         private void btnScorriParola_Click(object sender, RoutedEventArgs e)
         {
             string parolaSelezionata = lstParoleRicevute.Items[SelectIndex].ToString();
+            string parolaIntera = parolaSelezionata;
+            lstParoleRicevute.Items[SelectIndex] = parolaSelezionata + "  V";
             int index = parolaSelezionata.IndexOf(':') + 1;
             parolaSelezionata = parolaSelezionata.Substring(index + 1);
-            MessageBox.Show(parolaSelezionata);
+            string username = string.Empty;
+            for (int i = 0; i < index - 1; i++)
+            {
+                username += parolaIntera[i];
+            }
 
             //Index di selezione della parola ricevuta.
             SelectIndex++;
@@ -132,15 +146,18 @@ namespace ImpiccatoInRete
             {
                 if (parolaSelezionata == ParolaCorrente)
                 {
-                    bkParola.Text = ParolaCorrente;
+                    ParolaCodificata = ParolaCorrente;
+                    bkParola.FontSize = 15;
+                    bkParola.Text = $"Il giocatore {username} - ha vinto! La parola era {ParolaCorrente}.";
                 }
                 else
                 {
-                    ErrorCounter++;
+                    ErrorCounter--;
                 }
             }
             else
             {
+                bool ok = false;
                 char carattere = char.Parse(parolaSelezionata);
                 for (int i = 0; i < ParolaCodificata.Length; i++)
                 {
@@ -149,23 +166,48 @@ namespace ImpiccatoInRete
                         char[] chars = ParolaCodificata.ToCharArray();
                         chars[i] = carattere;
                         ParolaCodificata = new string(chars);
+                        bkParola.Text = ParolaCodificata;
+                        if (ParolaCodificata == ParolaCorrente)
+                        {
+                            bkParola.FontSize = 15;
+                            bkParola.Text = $"Il giocatore {username} - ha vinto! La parola era {ParolaCorrente}.";
+                            lstParoleRicevute.Items.Clear();
+                        }
+                        ok = true;
                     }
                 }
+                if (!ok)
+                {
+                    ErrorCounter--;
+                    bkCounter.Text = ErrorCounter.ToString();
+                }
             }
-           
 
-            //Recuperato indirizzo ip destinatario e la sua porta.
-            IPAddress broadcastAddress = IPAddress.Parse(txtDestIp.Text);
-            int destinationPortNumber = 61500;
+
+            //Recuperato indirizzo IP destinatario.
+            DestinationIp = IPAddress.Parse(txtDestIp.Text);
 
             //Esecuzione metodo di invio del messaggio.
-            SocketSend(broadcastAddress, destinationPortNumber, ParolaCodificata);
-            bkParola.Text = ParolaCodificata;
+            DataDestinationPortAddress = 61501;
+            SocketSend(DestinationIp, DataDestinationPortAddress, ParolaCodificata);
+            bkCounter.Text = ErrorCounter.ToString();
+            DataDestinationPortAddress = 61502;
+            SocketSend(DestinationIp, DataDestinationPortAddress, ErrorCounter.ToString());
+            if (lstParoleRicevute.Items.Count == SelectIndex)
+            {
+                btnScorriParola.IsEnabled = false;
+            }
+            else
+            {
+                btnScorriParola.IsEnabled = true;
+            }
         }
 
         private void btnGeneraNuovaParola_Click(object sender, RoutedEventArgs e)
         {
-            ErrorCounter = 0;
+            bkCounter.Text = "10";
+            btnMostraCorrente.IsEnabled = true;
+            ErrorCounter = 10;
             SelectIndex = 0;
             lstParoleRicevute.Items.Clear();
             Random rnd = new Random();
@@ -173,8 +215,50 @@ namespace ImpiccatoInRete
             ParolaCorrente = ListaParole[nParolaRandom];
             ParolaCodificata = GestioneImpiccato.CodificaParola(ParolaCorrente);
             bkParola.Text = ParolaCodificata;
-            MessageBox.Show(ParolaCorrente);
+            MessageBox.Show(ParolaCorrente, "Parola generata:", MessageBoxButton.OK, MessageBoxImage.Information);
+            DestinationIp = IPAddress.Parse(txtDestIp.Text);
+            DataDestinationPortAddress = 61500;
+            SocketSend(DestinationIp, DataDestinationPortAddress, ParolaCodificata);
+            DataDestinationPortAddress = 61502;
+            SocketSend(DestinationIp, DataDestinationPortAddress, ErrorCounter.ToString());
         }
 
+        private void bkCounter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            imgImpiccato.Source = new BitmapImage(new Uri($"\\Immagini\\imp{ErrorCounter}.png",UriKind.RelativeOrAbsolute));
+            if (int.Parse(bkCounter.Text) <= 3)
+            {
+                bkCounter.Foreground = Brushes.Red;
+                if (int.Parse(bkCounter.Text) == 0)
+                {
+                    lstParoleRicevute.Items.Clear();
+                }
+            }
+            else
+            {
+                bkCounter.Foreground = Brushes.SpringGreen;
+            }
+        }
+
+        private void btnMostraCorrente_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(ParolaCorrente, "Parola generata:", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void txtSoPo_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            bool controllo1 = GestioneNetwork.VerificaPorta(txtPort.Text, 61500, 61501,61502);
+            bool controllo2 = GestioneNetwork.ControllaTestoPerIP(txtSourceIp.Text);
+            txtPort.Background = controllo1 ? Brushes.LightGreen : Brushes.LightCoral;
+            txtSourceIp.Background = controllo2 ? Brushes.LightGreen : Brushes.LightCoral;
+            btnCreaSocket.IsEnabled = controllo2 && controllo1;
+        }
+
+        private void txtDestIp_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            bool controllo = GestioneNetwork.ControllaTestoPerIP(txtDestIp.Text);
+            txtDestIp.Background =  controllo ? Brushes.LightGreen : Brushes.LightCoral;
+            btnGeneraNuovaParola.IsEnabled = controllo;
+        }
     }
 }

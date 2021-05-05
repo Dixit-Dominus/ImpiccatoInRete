@@ -7,7 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Immagini\imp10.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GestioneNetworkECodifica\GestioneNetworkECodifica.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Immagini\imp10.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

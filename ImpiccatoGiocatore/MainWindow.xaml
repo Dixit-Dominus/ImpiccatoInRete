@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ImpiccatoGiocatore"
+        xmlns:local="clr-namespace:ImpiccatoGiocatore" ResizeMode="CanMinimize"
         mc:Ignorable="d" Loaded="Window_Loaded" Background="AliceBlue"
         Title="Giocatore Impiccato - Luca Casadei 4H 03/05/2021" Height="450" Width="800">
     <Grid>
@@ -19,32 +19,36 @@
         <Border CornerRadius="20" Background="White" Grid.Column="0" Grid.Row="2" BorderThickness="0.5" BorderBrush="Black" Margin="10">
             <StackPanel Orientation="Vertical">
                 <TextBlock x:Name="bkParola" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
+                <Grid Margin="5" Height="180">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox IsReadOnly="True" IsReadOnlyCaretVisible="False" x:Name="bkCounter" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80" Foreground="Lime" BorderBrush="Transparent" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextAlignment="Center" Grid.Row="0" Grid.Column="1" Margin="5" />
+                    <Image Source="\Immagini\imp10.png"/>
+                </Grid>
             </StackPanel>
         </Border>
         <Border Background="White" Grid.ColumnSpan="2" Grid.Row="0" Margin="10" BorderBrush="Black" BorderThickness="0.5">
             <StackPanel Orientation="Horizontal">
-                <Label Margin="30,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Source IP:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <TextBox TextChanged="txtInfo_TextChanged" Margin="10,0,0,0" x:Name="txtSourceIP" FontSize="20" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150"/>
+                <Label Margin="30,0,0,0" FontSize="15" VerticalAlignment="Center" Content="Destination IP:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBox TextChanged="txtInfo_TextChanged" Margin="10,0,0,0" x:Name="txtDestinationIp" FontSize="20" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150"/>
                 <Label Margin="30,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Port:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBox  FontSize="20" VerticalAlignment="Center" x:Name="txtPort" Width="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextChanged="txtInfo_TextChanged"/>
-                <Button Click="btnCreaSocket_Click" x:Name="btnCreaSocket" VerticalAlignment="Center" Content="Ascolta Canale" FontSize="15" Margin="40,0,0,0" Height="30" Width="180"/>
+                <Button IsEnabled="False"  x:Name="btnConfermaDestinazione" Click="btnConfermaDestinazione_Click" VerticalAlignment="Center" Content="Conferma" FontSize="15" Margin="40,0,0,0" Height="30" Width="180"/>
             </StackPanel>
         </Border>
         <Border Background="White" BorderBrush="Black" BorderThickness="0.5" Grid.Column="0" Grid.Row="1" Margin="10">
             <StackPanel Orientation="Horizontal">
                 <Label Margin="30,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Username:"/>
-                <TextBox x:Name="txtUsername" TextChanged="txtUsername_TextChanged" Margin="10,0,0,0" Width="175" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" />
-                <Button x:Name="btnUsernameConfirm" Content="Conferma" VerticalAlignment="Center" Width="100" FontSize="15" Height="30" Margin="20,0,0,0" Click="btnUsernameConfirm_Click"/>
+                <TextBox MaxLength="8" IsEnabled="False" x:Name="txtUsername" TextChanged="txtUsername_TextChanged" Margin="10,0,0,0" Width="175" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" />
+                <Button IsEnabled="False" x:Name="btnUsernameConfirm" Content="Conferma" VerticalAlignment="Center" Width="100" FontSize="15" Height="30" Margin="20,0,0,0" Click="btnUsernameConfirm_Click"/>
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="10" Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-                <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Destination IP:"/>
-                <TextBox x:Name="txtDestinationIp" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" Width="180"/>
-            </StackPanel>
-            <TextBox TextChanged="txtMessaggio_TextChanged" Height="25" HorizontalContentAlignment="Center" MaxLength="20" VerticalContentAlignment="Center" FontSize="15" x:Name="txtMessaggio"/>
-            <Button Height="30" IsEnabled="False" Click="btnInviaParola_Click" Content="Invia" x:Name="btnInviaParola"/>
-            <ListBox x:Name="lstParoleRicevute" Height="220" />
+            <TextBox IsEnabled="False" TextChanged="txtMessaggio_TextChanged" Height="28" HorizontalContentAlignment="Center" MaxLength="20" VerticalContentAlignment="Center" FontSize="15" x:Name="txtMessaggio"/>
+            <Button FontSize="15" Height="30" IsEnabled="False" Click="btnInviaParola_Click" Content="Invia Risposta" x:Name="btnInviaParola"/>
+            <ListBox HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" x:Name="lstParoleRicevute" Height="250" />
         </StackPanel>
     </Grid>
 </Window>

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpiccatoInRete", "Impiccat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpiccatoGiocatore", "ImpiccatoGiocatore\ImpiccatoGiocatore.csproj", "{2DBA7F64-FAF1-4201-9AEE-8FB523DC05DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestioneNetworkECodifica", "GestioneNetworkECodifica\GestioneNetworkECodifica.csproj", "{C35C08FA-5874-4DC6-B3FA-BFA8C830F875}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestioneNetworkECodifica", "GestioneNetworkECodifica\GestioneNetworkECodifica.csproj", "{C35C08FA-5874-4DC6-B3FA-BFA8C830F875}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

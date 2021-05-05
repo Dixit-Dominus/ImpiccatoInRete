@@ -11,7 +11,7 @@ namespace GestioneNetworkECodifica
     public class GestioneNetwork
     {
         //Ottiene l'IP della macchina corrente.
-        public static string OttieniIPLocale()
+        public static IPAddress OttieniIPLocale()
         {
             string localIP;
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
@@ -20,7 +20,7 @@ namespace GestioneNetworkECodifica
                 IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
                 localIP = endPoint.Address.ToString();
             }
-            return localIP;
+            return IPAddress.Parse(localIP);
         }
 
         //Verifica che una stringa sia un IP.

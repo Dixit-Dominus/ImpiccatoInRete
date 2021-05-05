@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ImpiccatoInRete"
-        mc:Ignorable="d" Loaded="Window_Loaded"
-        Title="Impiccato" Height="490" Width="800">
+        xmlns:local="clr-namespace:ImpiccatoInRete" ResizeMode="CanMinimize"
+        mc:Ignorable="d" Loaded="Window_Loaded" Background="#fcf0ff"
+        Title="Impiccato" Height="500" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -15,35 +15,45 @@
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="6*"/>
         </Grid.ColumnDefinitions>
-        <Border Grid.ColumnSpan="2" Margin="10" BorderBrush="Black" BorderThickness="0.5">
-            <StackPanel Orientation="Horizontal">
+        <Border IsEnabled="False" Grid.ColumnSpan="2" Margin="10" BorderBrush="Black" BorderThickness="0.5">
+            <StackPanel   Background="White" Orientation="Horizontal">
                 <Label Margin="30,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Source IP:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <TextBox x:Name="txtSourceIp" FontSize="20" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150"/>
+                <TextBox  TextChanged="txtSoPo_TextChanged" x:Name="txtSourceIp" FontSize="20" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150"/>
                 <Label Margin="50,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Port:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <TextBox  FontSize="20" VerticalAlignment="Center" x:Name="txtPort" Width="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <Button Click="btnCreaSocket_Click" x:Name="btnCreaSocket" VerticalAlignment="Center" Content="Ricezione ON" FontSize="20" Margin="70,0,0,0" Width="150"/>
+                <TextBox   TextChanged="txtSoPo_TextChanged" FontSize="20" VerticalAlignment="Center" x:Name="txtPort" Width="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button  Click="btnCreaSocket_Click" x:Name="btnCreaSocket" VerticalAlignment="Center" Content="Ricezione ON" FontSize="20" Margin="70,0,0,0" Width="150"/>
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="10" Orientation="Vertical">
-            <Label Content="Parole Ricevute:" FontSize="15"/>
-            <ListBox Height="280" Background="#fffbe8" x:Name="lstParoleRicevute" />
+            <Label Content="Risposte Ricevute:" FontSize="15"/>
+            <ListBox  Height="295" Background="#fffbe8" x:Name="lstParoleRicevute" />
         </StackPanel>
-        <Border BorderBrush="Black" BorderThickness="0.5" Margin="10" Grid.Row="1" Grid.Column="0">
+        <Border Background="White" CornerRadius="50" BorderBrush="Black" BorderThickness="0.5" Margin="10" Grid.Row="1" Grid.Column="0">
             <StackPanel Orientation="Vertical" >
                 <StackPanel HorizontalAlignment="Center" Margin="10" Orientation="Horizontal">
                     <Label FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Destination IP:"/>
-                    <TextBox HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="20,0,0,0" Width="200" Height="30" x:Name="txtDestIp"/>
+                    <TextBox TextChanged="txtDestIp_TextChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="20,0,0,0" Width="200" Height="30" x:Name="txtDestIp"/>
                 </StackPanel>
-                <Button Click="btnScorriParola_Click" Margin="10,0,10,10" Content="Scorri Parola"  x:Name="btnScorriParola" Height="40" FontSize="20"/>
+                <Button Background="PeachPuff" IsEnabled="False" Click="btnScorriParola_Click" Margin="10,0,10,10" Content="Scorri Risposta"  x:Name="btnScorriParola" Height="40" FontSize="20"/>
                 <Grid Margin="10" Height="200">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="6*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Vertical" Grid.RowSpan="2">
-                        <Button Height="30" Click="btnGeneraNuovaParola_Click" x:Name="btnGeneraNuovaParola" Content="Genera Nuova Parola"/>
-                        <Image x:Name="imgImpiccato" />
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button Background="AliceBlue" IsEnabled="False" Height="30" Click="btnGeneraNuovaParola_Click" x:Name="btnGeneraNuovaParola" Content="Genera Nuova Parola" Width="250"/>
+                            <Button IsEnabled="False" Click="btnMostraCorrente_Click" Width="100" x:Name="btnMostraCorrente" Content="Mostra Parola" Margin="20,0,0,0"/>
+                        </StackPanel>
                         <TextBlock x:Name="bkParola" FontSize="30" Text="" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="imgImpiccato" Source="\immagini\imp10.png" Height="140" Width="auto" />
+                            <TextBox Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Pacifico" FontSize="60" x:Name="bkCounter" TextChanged="bkCounter_TextChanged" IsReadOnly="True" IsReadOnlyCaretVisible="False" BorderBrush="Transparent" BorderThickness="0"/>
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </StackPanel>

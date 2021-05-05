@@ -7,7 +7,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Immagini\imp10.png" />
+    <None Remove="Immagini\imp4.png" />
+    <None Remove="Immagini\imp5.png" />
+    <None Remove="Immagini\imp6.png" />
+    <None Remove="Immagini\imp7.png" />
+    <None Remove="Immagini\imp8.png" />
+    <None Remove="Immagini\imp9.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GestioneNetworkECodifica\GestioneNetworkECodifica.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Immagini\imp10.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp6.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp7.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp9.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
