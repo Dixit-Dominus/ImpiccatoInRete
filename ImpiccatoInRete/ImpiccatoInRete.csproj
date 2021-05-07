@@ -4,10 +4,18 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>impiccato.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Immagini\imp0.png" />
+    <None Remove="Immagini\imp1.png" />
     <None Remove="Immagini\imp10.png" />
+    <None Remove="Immagini\imp11.png" />
+    <None Remove="Immagini\imp12.png" />
+    <None Remove="Immagini\imp13.png" />
+    <None Remove="Immagini\imp2.png" />
+    <None Remove="Immagini\imp3.png" />
     <None Remove="Immagini\imp4.png" />
     <None Remove="Immagini\imp5.png" />
     <None Remove="Immagini\imp6.png" />
@@ -21,7 +29,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Immagini\imp0.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Immagini\imp10.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp11.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp12.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp13.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Immagini\imp3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Immagini\imp4.png">

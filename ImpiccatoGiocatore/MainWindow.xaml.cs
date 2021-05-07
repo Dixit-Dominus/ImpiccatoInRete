@@ -24,7 +24,6 @@ namespace ImpiccatoGiocatore
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool abilitazioneMessaggio;
         public MainWindow()
         {
             InitializeComponent();
@@ -33,11 +32,63 @@ namespace ImpiccatoGiocatore
         //Invio del messaggio:
         private void btnInviaParola_Click(object sender, RoutedEventArgs e)
         {
-            txtMessaggio.Text = string.Empty;
             //Recuperato indirizzo ip destinatario e la sua porta.
             IPAddress destIpAddress = IPAddress.Parse(txtDestinationIp.Text);
             int destinationPortNumber = int.Parse(txtPort.Text);
+            if(!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), txtUsername.Text + ": ---> " + txtMessaggio.Text))
+            {
+                MessageBox.Show("Errore, nessun canale di ascolto disponibile. ", "Connessione non riuscita", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            txtMessaggio.Text = string.Empty;
+        }
 
+        private async void TCPListen(object sourceEndPoint)
+        {
+            IPEndPoint ipAndPort = sourceEndPoint as IPEndPoint;
+            TcpListener listener = new TcpListener(ipAndPort.Address, ipAndPort.Port);
+            listener.Start();
+            Byte[] bytesDati = new byte[256];
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    string datiRicevuti = string.Empty;
+                    TcpClient clientCollegato = listener.AcceptTcpClient();
+                    NetworkStream stream = clientCollegato.GetStream();
+                    int i = 0;
+                    while ((i = stream.Read(bytesDati, 0, bytesDati.Length)) != 0)
+                    {
+                        // Translate data bytes to a ASCII string.
+                        datiRicevuti = System.Text.Encoding.ASCII.GetString(bytesDati, 0, i);
+                        datiRicevuti = datiRicevuti.ToLower();
+                        if (datiRicevuti.EndsWith('?'))
+                        {
+                            datiRicevuti = datiRicevuti.Replace("?", "");
+                            this.Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                bkCounter.Text = datiRicevuti;
+                            }));
+                        }
+                        else if (datiRicevuti.EndsWith('*'))
+                        {
+                            datiRicevuti = datiRicevuti.Replace("*", "");
+                            this.Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                lstParoleRicevute.Items.Add(datiRicevuti);
+                            }));
+                        }
+                        else
+                        {
+                            this.Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                bkParola.Text = datiRicevuti;
+                            }));
+                        }
+                    }
+                    stream.Close();
+                    clientCollegato.Close();
+                }
+            });
         }
 
         //Controllo della casella di testo del messaggio.
@@ -46,13 +97,14 @@ namespace ImpiccatoGiocatore
             bool controllo = true;
             for (int i = 0; i < lstParoleRicevute.Items.Count; i++)
             {
-                int index = lstParoleRicevute.Items[i].ToString().IndexOf(':') + 1;
-                if (lstParoleRicevute.Items[i].ToString().Substring(index + 1) == txtMessaggio.Text)
+                int index = lstParoleRicevute.Items[i].ToString().LastIndexOf(' ') + 1;
+                if (lstParoleRicevute.Items[i].ToString().Substring(index) == txtMessaggio.Text || txtMessaggio.Text == "partreqmessage")
                 {
+                    if (txtMessaggio.Text.Contains('*') || txtMessaggio.Text.Contains('?'))
                     controllo = false;
                 }
             }
-            if (!string.IsNullOrWhiteSpace(txtMessaggio.Text) && abilitazioneMessaggio && controllo)
+            if (!string.IsNullOrWhiteSpace(txtMessaggio.Text)  && controllo)
             {
                 btnInviaParola.IsEnabled = true;
             }
@@ -89,7 +141,8 @@ namespace ImpiccatoGiocatore
             txtUsername.Background = Brushes.LightCoral;
             txtPort.Text = "60000";
             txtPort.Background = Brushes.LightGreen;
-            abilitazioneMessaggio = false;
+            Thread tcpListener = new Thread(new ParameterizedThreadStart(TCPListen));
+            tcpListener.Start(new IPEndPoint(GestioneNetwork.OttieniIPLocale(), 61500));
         }
 
         private void txtInfo_TextChanged(object sender, TextChangedEventArgs e)
@@ -103,11 +156,38 @@ namespace ImpiccatoGiocatore
 
         private void btnConfermaDestinazione_Click(object sender, RoutedEventArgs e)
         {
-            txtDestinationIp.IsEnabled = false;
-            txtPort.IsEnabled = false;
-            txtUsername.IsEnabled = true;
-            btnConfermaDestinazione.IsEnabled = false;
-            btnUsernameConfirm.IsEnabled = true;
+            if(!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), "partreqmessage"))
+            {
+                MessageBox.Show("Errore, nessun canale di ascolto disponibile. ", "Connessione non riuscita", MessageBoxButton.OK, MessageBoxImage.Warning);
+                btnConfermaDestinazione.IsEnabled = true;
+                txtDestinationIp.IsEnabled = true;
+                txtPort.IsEnabled = true;
+            }
+            else
+            {
+                btnConfermaDestinazione.IsEnabled = false;
+                txtDestinationIp.IsEnabled = false;
+                txtPort.IsEnabled = false;
+                txtUsername.IsEnabled = true;
+                btnUsernameConfirm.IsEnabled = true;
+            }
+        }
+
+        private void bkCounter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            imgImpiccato.Source = new BitmapImage(new Uri($"\\Immagini\\imp{bkCounter.Text}.png", UriKind.RelativeOrAbsolute));
+            if (int.Parse(bkCounter.Text) <= 3)
+            {
+                bkCounter.Foreground = Brushes.Red;
+                if (int.Parse(bkCounter.Text) == 0)
+                {
+                    lstParoleRicevute.Items.Clear();
+                }
+            }
+            else
+            {
+                bkCounter.Foreground = Brushes.SpringGreen;
+            }
         }
     }
 }

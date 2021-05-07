@@ -24,8 +24,8 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBox IsReadOnly="True" IsReadOnlyCaretVisible="False" x:Name="bkCounter" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80" Foreground="Lime" BorderBrush="Transparent" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextAlignment="Center" Grid.Row="0" Grid.Column="1" Margin="5" />
-                    <Image Source="\Immagini\imp10.png"/>
+                    <TextBox TextChanged="bkCounter_TextChanged" IsReadOnly="True" IsReadOnlyCaretVisible="False" x:Name="bkCounter" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80" Foreground="Lime" BorderBrush="Transparent" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextAlignment="Center" Grid.Row="0" Grid.Column="1" Margin="5" />
+                    <Image x:Name="imgImpiccato" Source="\Immagini\imp13.png"/>
                 </Grid>
             </StackPanel>
         </Border>
@@ -46,8 +46,8 @@
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="10" Orientation="Vertical">
-            <TextBox IsEnabled="False" TextChanged="txtMessaggio_TextChanged" Height="28" HorizontalContentAlignment="Center" MaxLength="20" VerticalContentAlignment="Center" FontSize="15" x:Name="txtMessaggio"/>
-            <Button FontSize="15" Height="30" IsEnabled="False" Click="btnInviaParola_Click" Content="Invia Risposta" x:Name="btnInviaParola"/>
+            <TextBox IsEnabled="False" Height="28" HorizontalContentAlignment="Center" MaxLength="20" VerticalContentAlignment="Center" FontSize="15" x:Name="txtMessaggio" TextChanged="txtMessaggio_TextChanged"/>
+            <Button FontSize="15" Height="30" IsEnabled="True" Click="btnInviaParola_Click" Content="Invia Risposta" x:Name="btnInviaParola"/>
             <ListBox HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" x:Name="lstParoleRicevute" Height="250" />
         </StackPanel>
     </Grid>

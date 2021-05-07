@@ -10,6 +10,25 @@ namespace GestioneNetworkECodifica
 {
     public class GestioneNetwork
     {
+        public static bool TCPSend(string hostname, int port, string mex)
+        {
+            try
+            {
+                TcpClient clientSender = new TcpClient(hostname, port);
+                Byte[] data = Encoding.ASCII.GetBytes(mex);
+                NetworkStream stream = clientSender.GetStream();
+                stream.Write(data, 0, data.Length);
+                stream.Close();
+                clientSender.Close();
+                return true;
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+            
+        }
+
         //Ottiene l'IP della macchina corrente.
         public static IPAddress OttieniIPLocale()
         {

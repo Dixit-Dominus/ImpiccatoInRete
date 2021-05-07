@@ -30,29 +30,27 @@
         </StackPanel>
         <Border Background="White" CornerRadius="50" BorderBrush="Black" BorderThickness="0.5" Margin="10" Grid.Row="1" Grid.Column="0">
             <StackPanel Orientation="Vertical" >
-                <StackPanel HorizontalAlignment="Center" Margin="10" Orientation="Horizontal">
-                    <Label FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Destination IP:"/>
-                    <TextBox TextChanged="txtDestIp_TextChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="20,0,0,0" Width="200" Height="30" x:Name="txtDestIp"/>
+                <StackPanel Margin="20" Orientation="Vertical">
+                    <Button  Padding="12" Background="PeachPuff" IsEnabled="False" Click="btnScorriParola_Click"  Content="Scorri Risposta"  x:Name="btnScorriParola" FontSize="20"/>
+                    <StackPanel Margin="0,10,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button  Background="AliceBlue" Height="30" Click="btnGeneraNuovaParola_Click" x:Name="btnGeneraNuovaParola" Content="Genera Nuova Parola" Width="250"/>
+                        <Button  Click="btnMostraCorrente_Click" Width="100" x:Name="btnMostraCorrente" Content="Mostra Parola" Margin="20,0,0,0"/>
+                    </StackPanel>
                 </StackPanel>
-                <Button Background="PeachPuff" IsEnabled="False" Click="btnScorriParola_Click" Margin="10,0,10,10" Content="Scorri Risposta"  x:Name="btnScorriParola" Height="40" FontSize="20"/>
                 <Grid Margin="10" Height="200">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="6*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Vertical" Grid.RowSpan="2">
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button Background="AliceBlue" IsEnabled="False" Height="30" Click="btnGeneraNuovaParola_Click" x:Name="btnGeneraNuovaParola" Content="Genera Nuova Parola" Width="250"/>
-                            <Button IsEnabled="False" Click="btnMostraCorrente_Click" Width="100" x:Name="btnMostraCorrente" Content="Mostra Parola" Margin="20,0,0,0"/>
-                        </StackPanel>
                         <TextBlock x:Name="bkParola" FontSize="30" Text="" HorizontalAlignment="Center" TextAlignment="Center" />
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Image x:Name="imgImpiccato" Source="\immagini\imp10.png" Height="140" Width="auto" />
-                            <TextBox Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Pacifico" FontSize="60" x:Name="bkCounter" TextChanged="bkCounter_TextChanged" IsReadOnly="True" IsReadOnlyCaretVisible="False" BorderBrush="Transparent" BorderThickness="0"/>
+                            <Image x:Name="imgImpiccato" Source="\immagini\imp13.png" Height="140" Width="auto" />
+                            <TextBox Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Pacifico" FontSize="80" x:Name="bkCounter" TextChanged="bkCounter_TextChanged" IsReadOnly="True" IsReadOnlyCaretVisible="False" BorderBrush="Transparent" BorderThickness="0"/>
                         </Grid>
                     </StackPanel>
                 </Grid>
