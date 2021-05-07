@@ -1,4 +1,2 @@
 # Impiccato In Rete
-Branches:
-master> Gioco dell'impiccato che utilizza il protocollo UDP
-TCP> Gioco dell'impiccato che supporta il protocollo TCP
+Gioco dell'impiccato che supporta più client e un server, il gioco supporta il protocollo TCP
