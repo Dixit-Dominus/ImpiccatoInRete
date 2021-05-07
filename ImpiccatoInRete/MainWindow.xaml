@@ -21,7 +21,7 @@
                 <TextBox  TextChanged="txtSoPo_TextChanged" x:Name="txtSourceIp" FontSize="20" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="150"/>
                 <Label Margin="50,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Port:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBox   TextChanged="txtSoPo_TextChanged" FontSize="20" VerticalAlignment="Center" x:Name="txtPort" Width="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <Button  Click="btnCreaSocket_Click" x:Name="btnCreaSocket" VerticalAlignment="Center" Content="Ricezione ON" FontSize="20" Margin="70,0,0,0" Width="150"/>
+                <Button  x:Name="btnCreaSocket" VerticalAlignment="Center" Content="Ricezione ON" FontSize="20" Margin="70,0,0,0" Width="150"/>
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="10" Orientation="Vertical">

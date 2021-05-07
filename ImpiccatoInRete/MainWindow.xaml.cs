@@ -44,6 +44,8 @@ namespace ImpiccatoInRete
         {
             txtPort.Text = "60000";
             txtSourceIp.Text = GestioneNetwork.OttieniIPLocale().ToString();
+            Thread startListening = new Thread(new ParameterizedThreadStart(TCPListen));
+            startListening.Start(new IPEndPoint(IPAddress.Parse(txtSourceIp.Text),int.Parse(txtPort.Text)));
             SelectIndex = 0;
             DataDestinationPortAddress = 61500;
             ErrorCounter = 10;
@@ -54,77 +56,33 @@ namespace ImpiccatoInRete
                 ListaParole.Add( leggiparole.ReadLine());
             }
             leggiparole.Close();
-            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(txtSourceIp.Text), int.Parse(txtPort.Text));
-            Thread startListener = new Thread(new ParameterizedThreadStart(SocketReceive));
-            startListener.Start(localEndPoint);
         }
 
-        //Metodo di invio del messaggio
-        private void SocketSend(IPAddress destinationIp, int destinationPort, string message)
+        private async void TCPListen(object sourceEndPoint)
         {
-            //Codifica in byte del messaggio da inviare
-            Byte[] byteInviati = Encoding.ASCII.GetBytes(message);
+            IPEndPoint ipAndPort = sourceEndPoint as IPEndPoint;
+            TcpListener listener = new TcpListener(ipAndPort.Address, ipAndPort.Port);
+            listener.Start();
+            Byte[] bytesDati = new byte[256];
 
-            //Creazione socket di invio
-            Socket socket = new Socket(destinationIp.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-
-            //Creazione invio socket di ascolto
-            IPEndPoint destinationEndPoint = new IPEndPoint(destinationIp, destinationPort);
-
-            //Invio dei dati.
-            socket.EnableBroadcast = true;
-            socket.SendTo(byteInviati, destinationEndPoint);
-        }
-        //Metodo di ricezione dei messaggi, attivazione del canale di ascolto.
-        private async void SocketReceive(object socketSource)
-        {
-            //Definizione dell'endPoint di ascolto
-            IPEndPoint listenerEndPoint = socketSource as IPEndPoint;
-
-            //Creazione socket di ascolto
-            Socket socket = new Socket(listenerEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-            socket.Bind(listenerEndPoint);
-
-            //Messaggio grande massimo 256 caratteri.
-            Byte[] byteRicevuti = new byte[256];
-            string messaggio = string.Empty;
-            int nCaratteriRicevuti;
-
-            //Istruzione che non va a bloccare la task della finesta (Non si blocca l'interfaccia)
             await Task.Run(() =>
             {
-                //Ascolto continuo
                 while (true)
                 {
-                    //Se c'è qualcosa di ricevuto nel socket.
-                    if (socket.Available > 0)
+                    string datiRicevuti = string.Empty;
+                    TcpClient clientCollegato = listener.AcceptTcpClient();
+                    NetworkStream stream = clientCollegato.GetStream();
+                    int i = 0;
+                    while ((i = stream.Read(bytesDati, 0, bytesDati.Length)) != 0)
                     {
-                        messaggio = string.Empty;
-                        //Otteniamo il numero di caratteri ricevuto.
-                        nCaratteriRicevuti = socket.Receive(byteRicevuti, byteRicevuti.Length, 0);
-                        //Trasformiamo il numero ricevuto nella codifica ascii e otteniamo quindi un messaggio di stringa.
-                        messaggio += Encoding.ASCII.GetString(byteRicevuti, 0, nCaratteriRicevuti);
-                        //Viene aggiornata l'interfaccia grafica in modo asincrono.
-                        SocketSend(DestinationIp, 61501, messaggio);
-                        this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            btnScorriParola.IsEnabled = true;
-                            lstParoleRicevute.Items.Add(messaggio);
-                        }));
+                        // Translate data bytes to a ASCII string.
+                        datiRicevuti = System.Text.Encoding.ASCII.GetString(bytesDati, 0, i);
+                        datiRicevuti = datiRicevuti.ToLower();
                     }
                 }
             });
         }
-        //Metodo di creazione del socket di ascolto.
-        private void btnCreaSocket_Click(object sender, RoutedEventArgs e)
-        {
-            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(txtSourceIp.Text), int.Parse(txtPort.Text));
-            Thread startListener = new Thread(new ParameterizedThreadStart(SocketReceive));
-            startListener.Start(localEndPoint);
-            btnCreaSocket.IsEnabled = false;
-            txtPort.IsEnabled = false;
-            txtSourceIp.IsEnabled = false;
-        }
+
         //Al click del bottone scorri parola, controllo correttezza parola ricevuta.
         private void btnScorriParola_Click(object sender, RoutedEventArgs e)
         {
@@ -189,10 +147,6 @@ namespace ImpiccatoInRete
 
             //Esecuzione metodo di invio del messaggio.
             DataDestinationPortAddress = 61501;
-            SocketSend(DestinationIp, DataDestinationPortAddress, ParolaCodificata);
-            bkCounter.Text = ErrorCounter.ToString();
-            DataDestinationPortAddress = 61502;
-            SocketSend(DestinationIp, DataDestinationPortAddress, ErrorCounter.ToString());
             if (lstParoleRicevute.Items.Count == SelectIndex)
             {
                 btnScorriParola.IsEnabled = false;
@@ -218,9 +172,6 @@ namespace ImpiccatoInRete
             MessageBox.Show(ParolaCorrente, "Parola generata:", MessageBoxButton.OK, MessageBoxImage.Information);
             DestinationIp = IPAddress.Parse(txtDestIp.Text);
             DataDestinationPortAddress = 61500;
-            SocketSend(DestinationIp, DataDestinationPortAddress, ParolaCodificata);
-            DataDestinationPortAddress = 61502;
-            SocketSend(DestinationIp, DataDestinationPortAddress, ErrorCounter.ToString());
         }
 
         private void bkCounter_TextChanged(object sender, TextChangedEventArgs e)
