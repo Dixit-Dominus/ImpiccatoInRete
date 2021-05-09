@@ -64,7 +64,7 @@ namespace ImpiccatoInRete
             }
             catch (SocketException)
             {
-                MessageBox.Show($"Errore, un server per l'impiccato è già in ascolto su questa macchina o il socket è già utilizzato, assicurarsi che il socket di ascolto --> {GestioneNetwork.OttieniIPLocale().ToString()}:60000 sia libero.\nL'applicazione verrà chiusa forzatamente dal sistema.", "Errore TCP", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Errore, un server per l'impiccato è già in ascolto su questa macchina o il socket è già utilizzato, assicurarsi che il socket di ascolto --> {GestioneNetwork.OttieniIPLocale()}:60000 sia libero.\nL'applicazione verrà chiusa forzatamente dal sistema.", "Errore TCP", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(0);
             }
             Byte[] bytesDati = new byte[256];
@@ -134,7 +134,7 @@ namespace ImpiccatoInRete
         }
 
         //Al click del bottone scorri parola, controllo correttezza parola ricevuta.
-        private void btnScorriParola_Click(object sender, RoutedEventArgs e)
+        private void BtnScorriParola_Click(object sender, RoutedEventArgs e)
         {
             string parolaSelezionata = lstParoleRicevute.Items[SelectIndex].ToString();
             string parolaIntera = parolaSelezionata;
@@ -210,7 +210,7 @@ namespace ImpiccatoInRete
             DistribuisciParolaAConnessi(bkCounter.Text + "?", 61500);
         }
 
-        private void btnGeneraNuovaParola_Click(object sender, RoutedEventArgs e)
+        private void BtnGeneraNuovaParola_Click(object sender, RoutedEventArgs e)
         {
             Reset();
             btnMostraCorrente.IsEnabled = true;
@@ -307,7 +307,7 @@ namespace ImpiccatoInRete
             btnCreaSocket.IsEnabled = controllo2 && controllo1;
         }
 
-        private void btnCambiaSocket_Click(object sender, RoutedEventArgs e)
+        private void BtnCambiaSocket_Click(object sender, RoutedEventArgs e)
         {
 
         }

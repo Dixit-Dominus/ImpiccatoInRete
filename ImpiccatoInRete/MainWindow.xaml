@@ -23,7 +23,7 @@
                 <TextBox   TextChanged="TxtSoPo_TextChanged" FontSize="20" VerticalAlignment="Center" x:Name="txtPort" Width="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <StackPanel Margin="70,0,0,0" VerticalAlignment="Center" Width="150" Orientation="Vertical">
                     <Button  x:Name="btnCreaSocket"  Content="Ricezione ON" FontSize="20" />
-                    <Button Click="btnCambiaSocket_Click" x:Name="btnCambiaSocket" Content="Cambia Socket" Margin="0,5,0,0" IsEnabled="True" FontSize="20"/>
+                    <Button Click="BtnCambiaSocket_Click" x:Name="btnCambiaSocket" Content="Cambia Socket" Margin="0,5,0,0" IsEnabled="True" FontSize="20"/>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -34,9 +34,9 @@
         <Border Background="White" CornerRadius="50" BorderBrush="Black" BorderThickness="0.5" Margin="10" Grid.Row="1" Grid.Column="0">
             <StackPanel Orientation="Vertical" >
                 <StackPanel Margin="20" Orientation="Vertical">
-                    <Button  Padding="12" Background="PeachPuff" IsEnabled="False" Click="btnScorriParola_Click"  Content="Scorri Risposta"  x:Name="btnScorriParola" FontSize="20"/>
+                    <Button  Padding="12" Background="PeachPuff" IsEnabled="False" Click="BtnScorriParola_Click"  Content="Scorri Risposta"  x:Name="btnScorriParola" FontSize="20"/>
                     <StackPanel Margin="0,10,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button  Background="AliceBlue" Height="30" Click="btnGeneraNuovaParola_Click" x:Name="btnGeneraNuovaParola" Content="Genera Nuova Parola" Width="250"/>
+                        <Button  Background="AliceBlue" Height="30" Click="BtnGeneraNuovaParola_Click" x:Name="btnGeneraNuovaParola" Content="Genera Nuova Parola" Width="250"/>
                         <Button  Click="BtnMostraCorrente_Click" Width="100" x:Name="btnMostraCorrente" Content="Mostra Parola" Margin="20,0,0,0"/>
                     </StackPanel>
                 </StackPanel>

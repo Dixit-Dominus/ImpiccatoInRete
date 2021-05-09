@@ -30,7 +30,7 @@ namespace ImpiccatoGiocatore
         }
 
         //Invio del messaggio:
-        private void btnInviaParola_Click(object sender, RoutedEventArgs e)
+        private void BtnInviaParola_Click(object sender, RoutedEventArgs e)
         {
             //Recuperato indirizzo ip destinatario e la sua porta.
             if (!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), txtUsername.Text + ": ---> " + txtMessaggio.Text))
@@ -43,14 +43,14 @@ namespace ImpiccatoGiocatore
         private async void TCPListen(object sourceEndPoint)
         {
             IPEndPoint ipAndPort = sourceEndPoint as IPEndPoint;
-            TcpListener listener = new TcpListener(ipAndPort.Address, ipAndPort.Port);
+            TcpListener listener = new(ipAndPort.Address, ipAndPort.Port);
             try
             {
                 listener.Start();
             }
             catch (SocketException)
             {
-                MessageBox.Show($"Errore, un client per l'impiccato è già in ascolto su questa macchina o il socket è già utilizzato, assicurarsi che il socket di ascolto --> {GestioneNetwork.OttieniIPLocale().ToString()}:61500 sia libero.\nL'applicazione verrà chiusa forzatamente dal sistema.","Errore TCP",MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show($"Errore, un client per l'impiccato è già in ascolto su questa macchina o il socket è già utilizzato, assicurarsi che il socket di ascolto --> {GestioneNetwork.OttieniIPLocale()}:61500 sia libero.\nL'applicazione verrà chiusa forzatamente dal sistema.","Errore TCP",MessageBoxButton.OK,MessageBoxImage.Error);
                 Environment.Exit(0);
             }
             Byte[] bytesDati = new byte[256];
@@ -98,7 +98,7 @@ namespace ImpiccatoGiocatore
         }
 
         //Controllo della casella di testo del messaggio.
-        private void txtMessaggio_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtMessaggio_TextChanged(object sender, TextChangedEventArgs e)
         {
             bool controllo = true;
             for (int i = 0; i < lstParoleRicevute.Items.Count; i++)
@@ -119,7 +119,7 @@ namespace ImpiccatoGiocatore
             }
         }
 
-        private void btnUsernameConfirm_Click(object sender, RoutedEventArgs e)
+        private void BtnUsernameConfirm_Click(object sender, RoutedEventArgs e)
         {
             txtUsername.Text = txtUsername.Text.Trim();
             txtUsername.IsEnabled = false;
@@ -150,7 +150,7 @@ namespace ImpiccatoGiocatore
             tcpListener.Start(new IPEndPoint(GestioneNetwork.OttieniIPLocale(), 61500));
         }
 
-        private void txtInfo_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtInfo_TextChanged(object sender, TextChangedEventArgs e)
         {
             bool controllo2 = GestioneNetwork.ControllaTestoPerIP(txtDestinationIp.Text);
             bool controllo1 = GestioneNetwork.VerificaPorta(txtPort.Text, 61500, 61501, 61502);
@@ -159,7 +159,7 @@ namespace ImpiccatoGiocatore
             btnConfermaDestinazione.IsEnabled = controllo1 && controllo2;
         }
 
-        private void btnConfermaDestinazione_Click(object sender, RoutedEventArgs e)
+        private void BtnConfermaDestinazione_Click(object sender, RoutedEventArgs e)
         {
             if (!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), "partreqmessage"))
             {
@@ -178,7 +178,7 @@ namespace ImpiccatoGiocatore
             }
         }
 
-        private void bkCounter_TextChanged(object sender, TextChangedEventArgs e)
+        private void BkCounter_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (bkCounter.Text != "v" && bkCounter.Text != "V")
             {
