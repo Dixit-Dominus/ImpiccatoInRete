@@ -41,13 +41,13 @@
         <Border Background="White" BorderBrush="Black" BorderThickness="0.5" Grid.Column="0" Grid.Row="1" Margin="10">
             <StackPanel Orientation="Horizontal">
                 <Label Margin="30,0,0,0" FontSize="20" VerticalAlignment="Center" Content="Username:"/>
-                <TextBox MaxLength="8" IsEnabled="False" x:Name="txtUsername" TextChanged="txtUsername_TextChanged" Margin="10,0,0,0" Width="175" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" />
+                <TextBox MaxLength="8" IsEnabled="False" x:Name="txtUsername" TextChanged="TxtUsername_TextChanged" Margin="10,0,0,0" Width="175" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" />
                 <Button IsEnabled="False" x:Name="btnUsernameConfirm" Content="Conferma" VerticalAlignment="Center" Width="100" FontSize="15" Height="30" Margin="20,0,0,0" Click="btnUsernameConfirm_Click"/>
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="10" Orientation="Vertical">
             <TextBox IsEnabled="False" Height="28" HorizontalContentAlignment="Center" MaxLength="20" VerticalContentAlignment="Center" FontSize="15" x:Name="txtMessaggio" TextChanged="txtMessaggio_TextChanged"/>
-            <Button FontSize="15" Height="30" IsEnabled="True" Click="btnInviaParola_Click" Content="Invia Risposta" x:Name="btnInviaParola"/>
+            <Button FontSize="15" Height="30" IsEnabled="False" Click="btnInviaParola_Click" Content="Invia Risposta" x:Name="btnInviaParola"/>
             <ListBox HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" x:Name="lstParoleRicevute" Height="250" />
         </StackPanel>
     </Grid>

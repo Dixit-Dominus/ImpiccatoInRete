@@ -43,7 +43,7 @@ namespace ImpiccatoInRete
         {
             txtPort.Text = "60000";
             txtSourceIp.Text = GestioneNetwork.OttieniIPLocale().ToString();
-            Thread startListening = new Thread(new ParameterizedThreadStart(TCPListen));
+            Thread startListening = new(new ParameterizedThreadStart(TCPListen));
             startListening.Start(new IPEndPoint(IPAddress.Parse(txtSourceIp.Text), int.Parse(txtPort.Text)));
             ListaParole = new List<string>();
             DestinationIps = new List<IPAddress>();
@@ -57,8 +57,16 @@ namespace ImpiccatoInRete
         private async void TCPListen(object sourceEndPoint)
         {
             IPEndPoint ipAndPort = sourceEndPoint as IPEndPoint;
-            TcpListener listener = new TcpListener(ipAndPort.Address, ipAndPort.Port);
-            listener.Start();
+            TcpListener listener = new(ipAndPort.Address, ipAndPort.Port);
+            try
+            {
+                listener.Start();
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show($"Errore, un server per l'impiccato è già in ascolto su questa macchina o il socket è già utilizzato, assicurarsi che il socket di ascolto --> {GestioneNetwork.OttieniIPLocale().ToString()}:60000 sia libero.\nL'applicazione verrà chiusa forzatamente dal sistema.", "Errore TCP", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(0);
+            }
             Byte[] bytesDati = new byte[256];
 
             await Task.Run(() =>
@@ -113,7 +121,8 @@ namespace ImpiccatoInRete
                                 }
                                 else
                                 {
-                                    DistribuisciParolaAConnessi(bkCounter.Text, 61500);
+                                    DistribuisciParolaAConnessi(bkParola.Text, 61500);
+                                    DistribuisciParolaAConnessi(bkCounter.Text + "?", 61500);
                                 }
                             }));
                         }
@@ -149,6 +158,9 @@ namespace ImpiccatoInRete
                     ParolaCodificata = ParolaCorrente;
                     bkParola.FontSize = 15;
                     bkParola.Text = $"- {username} - ha vinto! -> {ParolaCorrente}.";
+                    bkCounter.Text = "V";
+                    btnScorriParola.IsEnabled = false;
+                    SelectIndex = 0;
                 }
                 else
                 {
@@ -171,8 +183,11 @@ namespace ImpiccatoInRete
                         if (ParolaCodificata == ParolaCorrente)
                         {
                             bkParola.FontSize = 15;
-                            bkParola.Text = $"- {username} - ha vinto! -> {ParolaCorrente}.";
+                            bkParola.Text = $"- {username} - ha vinto! --> {ParolaCorrente}.";
                             lstParoleRicevute.Items.Clear();
+                            bkCounter.Text = "V";
+                            btnScorriParola.IsEnabled = false;
+                            SelectIndex = 0;
                         }
                         ok = true;
                     }
@@ -192,6 +207,7 @@ namespace ImpiccatoInRete
                 btnScorriParola.IsEnabled = true;
             }
             DistribuisciParolaAConnessi(bkParola.Text,61500);
+            DistribuisciParolaAConnessi(bkCounter.Text + "?", 61500);
         }
 
         private void btnGeneraNuovaParola_Click(object sender, RoutedEventArgs e)
@@ -203,6 +219,7 @@ namespace ImpiccatoInRete
             bkParola.Text = ParolaCodificata;
             MessageBox.Show(ParolaCorrente, "Parola generata:", MessageBoxButton.OK, MessageBoxImage.Information);
             DistribuisciParolaAConnessi(bkParola.Text,61500);
+            DistribuisciParolaAConnessi(bkCounter.Text + "?", 61500);
         }
 
         private void DistribuisciParolaAConnessi(string mex,int port)
@@ -223,50 +240,76 @@ namespace ImpiccatoInRete
             bkCounter.Text = ErrorCounter.ToString();
             SelectIndex = 0;
             lstParoleRicevute.Items.Clear();
-            StreamReader leggiparole = new StreamReader("parole.txt");
-            while (!leggiparole.EndOfStream)
+            if (File.Exists("parole.txt"))
             {
-                ListaParole.Add(leggiparole.ReadLine());
+                StreamReader leggiparole = new("parole.txt");
+                while (!leggiparole.EndOfStream)
+                {
+                    ListaParole.Add(leggiparole.ReadLine());
+                }
+                leggiparole.Close();
             }
-            leggiparole.Close();
+            else
+            {
+                MessageBox.Show("Attenzione! File parole.txt non trovato, assicurarsi che sia presente nella cartella dell'eseguibile.\nL'applicazione verrà chiusa in modo forzato.", "File non trovato", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(0);
+            }
         }
 
         private string GeneraParolaCasuale()
         {
-            Random rnd = new Random();
+            Random rnd = new();
             int nParolaRandom = rnd.Next(0, ListaParole.Count);
             return ListaParole[nParolaRandom];
         }
 
-        private void bkCounter_TextChanged(object sender, TextChangedEventArgs e)
+        private void BkCounter_TextChanged(object sender, TextChangedEventArgs e)
         {
-            imgImpiccato.Source = new BitmapImage(new Uri($"\\Immagini\\imp{ErrorCounter}.png", UriKind.RelativeOrAbsolute));
-            if (int.Parse(bkCounter.Text) <= 3)
+            if (bkCounter.Text != "V")
             {
-                bkCounter.Foreground = Brushes.Red;
-                if (int.Parse(bkCounter.Text) == 0)
+                imgImpiccato.Source = new BitmapImage(new Uri($"\\Immagini\\imp{ErrorCounter}.png", UriKind.RelativeOrAbsolute));
+                if (int.Parse(bkCounter.Text) <= 3)
                 {
-                    lstParoleRicevute.Items.Clear();
+                    bkCounter.Foreground = Brushes.Red;
+                    if (int.Parse(bkCounter.Text) == 0)
+                    {
+                        lstParoleRicevute.Items.Clear();
+                        btnScorriParola.IsEnabled = false;
+                        bkParola.Text = "Nessuno ha vinto :(";
+                        SelectIndex = 0;
+                    }
+                }
+                else
+                {
+                    bkCounter.Foreground = Brushes.SpringGreen;
                 }
             }
             else
             {
-                bkCounter.Foreground = Brushes.SpringGreen;
+                
+                lstParoleRicevute.Items.Clear();
+                btnMostraCorrente.IsEnabled = false;
+                btnScorriParola.IsEnabled = false;
             }
         }
 
-        private void btnMostraCorrente_Click(object sender, RoutedEventArgs e)
+        private void BtnMostraCorrente_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(ParolaCorrente, "Parola generata:", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void txtSoPo_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtSoPo_TextChanged(object sender, TextChangedEventArgs e)
         {
             bool controllo1 = GestioneNetwork.VerificaPorta(txtPort.Text, 61500, 61501, 61502);
             bool controllo2 = GestioneNetwork.ControllaTestoPerIP(txtSourceIp.Text);
             txtPort.Background = controllo1 ? Brushes.LightGreen : Brushes.LightCoral;
             txtSourceIp.Background = controllo2 ? Brushes.LightGreen : Brushes.LightCoral;
             btnCreaSocket.IsEnabled = controllo2 && controllo1;
+        }
+
+        private void btnCambiaSocket_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -33,11 +33,9 @@ namespace ImpiccatoGiocatore
         private void btnInviaParola_Click(object sender, RoutedEventArgs e)
         {
             //Recuperato indirizzo ip destinatario e la sua porta.
-            IPAddress destIpAddress = IPAddress.Parse(txtDestinationIp.Text);
-            int destinationPortNumber = int.Parse(txtPort.Text);
-            if(!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), txtUsername.Text + ": ---> " + txtMessaggio.Text))
+            if (!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), txtUsername.Text + ": ---> " + txtMessaggio.Text))
             {
-                MessageBox.Show("Errore, nessun canale di ascolto disponibile. ", "Connessione non riuscita", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Errore, nessun canale di ascolto disponibile.", "Connessione non riuscita", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             txtMessaggio.Text = string.Empty;
         }
@@ -46,7 +44,15 @@ namespace ImpiccatoGiocatore
         {
             IPEndPoint ipAndPort = sourceEndPoint as IPEndPoint;
             TcpListener listener = new TcpListener(ipAndPort.Address, ipAndPort.Port);
-            listener.Start();
+            try
+            {
+                listener.Start();
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show($"Errore, un client per l'impiccato è già in ascolto su questa macchina o il socket è già utilizzato, assicurarsi che il socket di ascolto --> {GestioneNetwork.OttieniIPLocale().ToString()}:61500 sia libero.\nL'applicazione verrà chiusa forzatamente dal sistema.","Errore TCP",MessageBoxButton.OK,MessageBoxImage.Error);
+                Environment.Exit(0);
+            }
             Byte[] bytesDati = new byte[256];
             await Task.Run(() =>
             {
@@ -59,7 +65,7 @@ namespace ImpiccatoGiocatore
                     while ((i = stream.Read(bytesDati, 0, bytesDati.Length)) != 0)
                     {
                         // Translate data bytes to a ASCII string.
-                        datiRicevuti = System.Text.Encoding.ASCII.GetString(bytesDati, 0, i);
+                        datiRicevuti = Encoding.ASCII.GetString(bytesDati, 0, i);
                         datiRicevuti = datiRicevuti.ToLower();
                         if (datiRicevuti.EndsWith('?'))
                         {
@@ -98,13 +104,12 @@ namespace ImpiccatoGiocatore
             for (int i = 0; i < lstParoleRicevute.Items.Count; i++)
             {
                 int index = lstParoleRicevute.Items[i].ToString().LastIndexOf(' ') + 1;
-                if (lstParoleRicevute.Items[i].ToString().Substring(index) == txtMessaggio.Text || txtMessaggio.Text == "partreqmessage")
+                if (lstParoleRicevute.Items[i].ToString().Substring(index) == txtMessaggio.Text || txtMessaggio.Text == "partreqmessage" || txtMessaggio.Text.Contains('*') || txtMessaggio.Text.Contains('?'))
                 {
-                    if (txtMessaggio.Text.Contains('*') || txtMessaggio.Text.Contains('?'))
                     controllo = false;
                 }
             }
-            if (!string.IsNullOrWhiteSpace(txtMessaggio.Text)  && controllo)
+            if (!string.IsNullOrWhiteSpace(txtMessaggio.Text) && controllo)
             {
                 btnInviaParola.IsEnabled = true;
             }
@@ -122,9 +127,9 @@ namespace ImpiccatoGiocatore
             txtMessaggio.IsEnabled = true;
         }
 
-        private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtUsername_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(txtUsername.Text) && !txtUsername.Text.Contains(":")) 
+            if (!string.IsNullOrWhiteSpace(txtUsername.Text) && !txtUsername.Text.Contains(":"))
             {
                 btnUsernameConfirm.IsEnabled = true;
                 txtUsername.Background = Brushes.LightGreen;
@@ -141,14 +146,14 @@ namespace ImpiccatoGiocatore
             txtUsername.Background = Brushes.LightCoral;
             txtPort.Text = "60000";
             txtPort.Background = Brushes.LightGreen;
-            Thread tcpListener = new Thread(new ParameterizedThreadStart(TCPListen));
+            Thread tcpListener = new(new ParameterizedThreadStart(TCPListen));
             tcpListener.Start(new IPEndPoint(GestioneNetwork.OttieniIPLocale(), 61500));
         }
 
         private void txtInfo_TextChanged(object sender, TextChangedEventArgs e)
         {
             bool controllo2 = GestioneNetwork.ControllaTestoPerIP(txtDestinationIp.Text);
-            bool controllo1 = GestioneNetwork.VerificaPorta(txtPort.Text, 61500, 61501,61502);
+            bool controllo1 = GestioneNetwork.VerificaPorta(txtPort.Text, 61500, 61501, 61502);
             txtPort.Background = controllo1 ? Brushes.LightGreen : Brushes.LightCoral;
             txtDestinationIp.Background = controllo2 ? Brushes.LightGreen : Brushes.LightCoral;
             btnConfermaDestinazione.IsEnabled = controllo1 && controllo2;
@@ -156,9 +161,9 @@ namespace ImpiccatoGiocatore
 
         private void btnConfermaDestinazione_Click(object sender, RoutedEventArgs e)
         {
-            if(!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), "partreqmessage"))
+            if (!GestioneNetwork.TCPSend(txtDestinationIp.Text, int.Parse(txtPort.Text), "partreqmessage"))
             {
-                MessageBox.Show("Errore, nessun canale di ascolto disponibile. ", "Connessione non riuscita", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Errore, nessun canale di ascolto disponibile.", "Connessione non riuscita", MessageBoxButton.OK, MessageBoxImage.Warning);
                 btnConfermaDestinazione.IsEnabled = true;
                 txtDestinationIp.IsEnabled = true;
                 txtPort.IsEnabled = true;
@@ -175,18 +180,33 @@ namespace ImpiccatoGiocatore
 
         private void bkCounter_TextChanged(object sender, TextChangedEventArgs e)
         {
-            imgImpiccato.Source = new BitmapImage(new Uri($"\\Immagini\\imp{bkCounter.Text}.png", UriKind.RelativeOrAbsolute));
-            if (int.Parse(bkCounter.Text) <= 3)
+            if (bkCounter.Text != "v" && bkCounter.Text != "V")
             {
-                bkCounter.Foreground = Brushes.Red;
-                if (int.Parse(bkCounter.Text) == 0)
+                imgImpiccato.Source = new BitmapImage(new Uri($"\\Immagini\\imp{bkCounter.Text}.png", UriKind.RelativeOrAbsolute));
+                if (int.Parse(bkCounter.Text) <= 3)
                 {
-                    lstParoleRicevute.Items.Clear();
+                    bkCounter.Foreground = Brushes.Red;
+                    if (int.Parse(bkCounter.Text) == 0)
+                    {
+                        lstParoleRicevute.Items.Clear();
+                        btnInviaParola.IsEnabled = false;
+                        txtMessaggio.IsEnabled = false;
+                        txtUsername.IsEnabled = true;
+                        btnUsernameConfirm.IsEnabled = true;
+                    }
+                }
+                else
+                {
+                    bkCounter.Foreground = Brushes.SpringGreen;
                 }
             }
             else
             {
-                bkCounter.Foreground = Brushes.SpringGreen;
+                lstParoleRicevute.Items.Clear();
+                btnInviaParola.IsEnabled = false;
+                txtMessaggio.IsEnabled = false;
+                txtUsername.IsEnabled = true;
+                btnUsernameConfirm.IsEnabled = true;
             }
         }
     }
